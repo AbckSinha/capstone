@@ -1,0 +1,19 @@
+{
+	"host": "0.0.0.0",
+	"port": "5005",
+	"ssl": false,
+	"dbConnector": {
+		"user": "user",
+		"host": "server_address",
+		"database": "document",
+		"password": "pwd",
+		"port": 5432,
+		"max": 800,
+		"idleTimeoutMillis": 30000,
+		"connectionTimeoutMillis": 5000
+	},
+	"AES": {
+		"key": "Zr4u7x!A%D*GA?D(Zr4u7x!A%D*GA?D(",
+		"iv": "5u8x/A%D*Gv9y$B&"
+	}
+}

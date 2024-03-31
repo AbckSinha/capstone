@@ -1,0 +1,52 @@
+{
+  "name": "document_pod_api_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon",
+    "install-service": "node windows-service.js --install",
+    "uninstall-service": "node windows-service.js --uninstall",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^0.23.0",
+    "fastify": "^3.22.1",
+    "fastify-static": "^4.4.2",
+    "minimist": "^1.2.5",
+    "moment": "^2.29.4",
+    "qs": "^6.11.0",
+    "util": "^0.12.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "peerDependencies": {
+    "@vercel/ncc": "0.33.3",
+    "pkg": "5.5.2"
+  },
+  "pkg": {
+    "scripts": "index.js",
+    "assets": [
+      "schema/**/*",
+      "conf/**/*"
+    ],
+    "targets": [
+      "node16-win-x64"
+    ],
+    "outputPath": "bin"
+  },
+  "bin": {
+    "docpodapi": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Abhishek Sinha",
+  "contributors": [
+    "Abhishek Kumar"
+  ],
+  "license": "MIT"
+}

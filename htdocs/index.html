@@ -1,0 +1,186 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>DocTalker</title>
+	<link rel="icon" href="">
+	<link rel="stylesheet" type="text/css" href="./lib/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdn.form.io/formiojs/formio.full.min.css">
+	<script src="https://cdn.form.io/formiojs/formio.full.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+		integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+	<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+	<link rel="stylesheet" type="text/css" href="./main.css" />
+</head>
+
+<body>
+
+	<div>
+		<div class="container-fluid">
+			<div class="row d-flex justify-content-center" style="margin-top: 5%;">
+
+				<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+					<div class="card card-shadow">
+						<div class="card-header card-hdr">
+							<h1 class="title-div">DocTalker</h1>
+						</div>
+
+						<div class="card-body">
+							<div class="form-card">
+
+								<div class="row justify-content-between text-left">
+									<div class="form-group col-12 flex-column d-flex right-padding">
+										<div class="col-12 padding-zero">
+											<div class="col-12 float-left padding-zero">
+												<label class="form-control-label">What you have in mind?<span class="text-danger">
+														*</span></label>
+												<textarea type="text" id="lan_number" name="lan_number"
+													placeholder="Lan Number" required style="width: 100%;"> </textarea>
+											</div>
+											
+										</div>
+									</div>
+								</div>
+
+
+								<div class="row">
+									<div class="form-group"> <button type="submit" class="btn-block"
+											onclick="generateURL()" id="searchbtn">Submit</button> </div>
+								</div>
+								<div class="row justify-content-between text-left link-div">
+									<div class="form-group col-12 flex-column d-flex right-padding"> <label
+											class="form-control-label">Link</label>
+										<div class="col-12 padding-zero">
+											<div class="col-9 float-left padding-zero"><input type="text" id="link"
+													name="link" style=" width: 100%;"> </div>
+											<div class="col-3 float-right">
+												<button class="btn link-btn tooltip" onclick="copyURL()"
+													onmouseout="copyOutFunc()">
+													<span class="tooltiptext" id="myTooltip"></span>
+													<i class="fa fa-clone"></i>
+												</button>
+												<button class="btn link-btn retooltip" onclick="redirectURL()"
+													onmouseout="rediectOutFunc()">
+													<span class="retooltiptext" id="redirecturlbtn"></span>
+													<!-- <i class='fa fa-external-link-alt'></i> -->
+													<i class="fa-thin fa-arrow-up"></i>
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<footer class="col-12">© 2024 IISc Bangalore. Powered by Group 3 Team.</footer>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<script type="text/javascript" src="./lib/jquery-3.6.0.min.js"></script>
+	<script src="./lib/bootstrap/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.24.0/axios.min.js"
+		integrity="sha512-u9akINsQsAkG9xjc1cnGF4zw5TFDwkxuc9vUp5dltDWYCSmyd0meygbvgXrlc/z7/o4a19Fb5V0OUE58J7dcyw=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script type="text/javascript" src="./main.js"></script>
+	<script>
+		$(".link-div").hide();
+		async function generateURL() {
+			let lanNumber, source, docKey, isFlexi, mobile, email, mailformat, res, isCommunicate;
+			mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+			lanNumber = document.getElementById('lan_number').value;
+			source = document.getElementById('source').value;
+
+			if (lanNumber.length > 0 && source.length > 0) {
+				let plainText = lanNumber + '|' + source;
+				console.log('plainText ->', plainText);
+				let config = {
+					method: 'post',
+					url: 'http://10.50.64.6:80/wlg/api/generateURL',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': '',
+					},
+					data: ''
+				}
+				if (isCommunicate == true) {
+					mobile = document.getElementById('mobile').value;
+					email = document.getElementById('email').value;
+					if (mobile.length == 10 && email.match(mailformat)) {
+						config.data = { 'text': plainText, 'mobile': mobile, 'email': email, 'isCommunicate': isCommunicate }
+						axiosCall(config);
+					} else {
+						alert('Mobile number and email are mandatory');
+					}
+				} else {
+					config.data = { 'text': plainText, 'isCommunicate': false }
+					axiosCall(config);
+				}
+
+			} else {
+				alert('Mandatory fields are missing');
+			}
+		}
+		async function axiosCall(config) {
+			let res;
+			await axios(config)
+				.then(function (response) {
+					if (response) {
+						console.log('200', response.data)
+						res = response.data
+					} else {
+						console.log('else', response)
+					}
+				})
+				.catch(function (error) {
+					console.log("Error in generate url", error);
+				});
+			document.getElementById('lan_number').value = "";
+			document.getElementById('source').value = "";
+			document.getElementById('link').value = res;
+			$(".link-div").show();
+		}
+
+		function copyURL() {
+			var copyText = document.getElementById("link");
+			copyText.select();
+			copyText.setSelectionRange(0, 99999);
+			navigator.clipboard.writeText(copyText.value);
+			var tooltip = document.getElementById("myTooltip");
+			tooltip.innerHTML = "Copied to clipboard";
+		}
+
+		function redirectURL() {
+			let URL = document.getElementById('link').value;
+			window.open(URL, '_blank').focus();
+		}
+
+		function copyOutFunc() {
+			var tooltip = document.getElementById("myTooltip");
+			tooltip.innerHTML = "Copy URL";
+		}
+
+		function rediectOutFunc() {
+			var tooltip = document.getElementById("redirecturlbtn");
+			tooltip.innerHTML = "Redirect URL";
+		}
+
+	</script>
+</body>
+
+</html>
